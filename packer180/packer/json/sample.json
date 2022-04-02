@@ -1,0 +1,61 @@
+{
+  "variables": {
+    "profile": "default",
+    "region": "ap-northeast-1",
+    "instance_type": "t3.small",
+    "ssh_interface": "private_ip",
+    "service_name": "sample"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "ami_name": "{{user `service_name`}}-{{user `environment`}}-{{isotime \"20060102T0304Z\"}}",
+      "profile": "{{user `profile`}}",
+      "region": "{{user `region`}}",
+      "source_ami_filter": {
+        "filters": {
+          "name": "amzn2-ami-hvm-*-x86_64-gp2"
+        },
+        "owners": ["amazon"],
+        "most_recent": true
+      },
+      "instance_type": "{{user `instance_type`}}",
+      "vpc_id": "{{user `vpc_id`}}",
+      "subnet_id": "{{user `subnet_id`}}",
+      "security_group_ids": "{{user `security_group_ids`}}",
+      "ssh_username": "ec2-user",
+      "ssh_timeout": "5m",
+      "ssh_interface": "{{user `ssh_interface`}}",
+      "tags": {
+        "Name": "{{user `service_name`}}-{{user `environment`}}",
+        "Environment": "{{user `environment`}}",
+        "Amazon_AMI_Management_Identifier": "{{user `service_name`}}-{{user `environment`}}"
+      },
+      "run_tags": {
+        "Name": "Packer Build of {{user `service_name`}}-{{user `environment`}}"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "chef-solo",
+      "cookbook_paths": "../../chef/cookbooks",
+      "environments_path": "../../chef/environments",
+      "chef_environment": "common",
+      "roles_path": "../../chef/roles",
+      "run_list": ["role[{{user `environment`}}]"]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "echo sample > /tmp/packer_build.log"
+      ]
+    }
+  ],
+  "post-processors":[{
+    "type": "amazon-ami-management",
+    "regions": ["{{user `region`}}"],
+    "identifier": "{{user `service_name`}}-{{user `environment`}}",
+    "keep_releases": "5"
+  }]
+}
