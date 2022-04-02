@@ -1,0 +1,14 @@
+{
+  "name": "staging",
+  "description": "sample role of staging",
+  "chef_type": "role",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+    "content": "sample text of staging"
+  },
+  "override_attributes": {},
+  "run_list": [
+    "recipe[base]",
+    "recipe[httpd]"
+  ]
+}

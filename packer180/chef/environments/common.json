@@ -1,0 +1,13 @@
+{
+  "name": "common",
+  "description": "environment of common",
+  "chef_type": "environment",
+  "json_class": "Chef::Environment",
+  "default_attributes": {
+    "hostname": "sample"
+  },
+  "override_attributes": {},
+  "cookbook_versions": {
+    "sample": "= 1.0.0"
+  }
+}
