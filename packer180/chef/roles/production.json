@@ -1,0 +1,14 @@
+{
+  "name": "production",
+  "description": "sample role of production",
+  "chef_type": "role",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+    "content": "sample text of production"
+  },
+  "override_attributes": {},
+  "run_list": [
+    "recipe[base]",
+    "recipe[httpd]"
+  ]
+}
